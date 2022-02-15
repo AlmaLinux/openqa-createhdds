@@ -127,10 +127,10 @@
         {
             "name" : "minimal",
             "releases" : {
-                "-1" : ["x86_64", "ppc64le", "aarch64"],
-                "-2" : ["x86_64", "ppc64le", "aarch64"],
-                "stable": ["x86_64"],
-                "branched": ["x86_64"]
+                "-1" : ["x86_64", "ppc64le"],
+                "-2" : ["x86_64", "ppc64le"],
+                "stable": ["x86_64", "aarch64"],
+                "branched": ["x86_64", "aarch64"]
             },
             "size" : "10",
             "imgver": "3"
