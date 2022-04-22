@@ -512,15 +512,10 @@ def get_virtinstall_images(imggrp, nextrel=None, releases=None):
                 nextrel = fedfind.helpers.get_current_release() + 1
             rels = [int(nextrel) + int(release)]
         else:
-            # assume a single integer release number
+            # assume a single integer release number, or 'rawhide'
             rels = [release]
         for arch in arches:
             for rel in rels:
-                # i686 images can't be created from f31 on; let's filter
-                # out all i686 images for f31 and later. Once f30 is EOL
-                # we can just ditch them from hdds.json and remove this
-                if arch == 'i686' and (rel == 'rawhide' or int(rel) > 30):
-                    continue
                 key = "{0}-{1}".format(rel, arch)
                 # using a dict here avoids dupes
                 imgs[key] = VirtInstallImage(name, rel, arch, variant=variant, size=size,
