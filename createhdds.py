@@ -315,6 +315,10 @@ class VirtInstallImage(object):
                 loctmp = "https://download.fedoraproject.org/pub/{0}/releases/{1}/{2}/{3}/os/"
             ksfile = self.kickstart_file
             xargs = "inst.ks=file:/{0}".format(ksfile)
+            if str(self.release) == '35':
+                # we need this for installs to work with updated systemd:
+                # https://bugzilla.redhat.com/show_bug.cgi?id=2019579#c24
+                xargs += " inst.updates=https://rvykydal.fedorapeople.org/update-images/updates.f35-2019579-resolvconf.img"
             args = ["virt-install", "--disk", "size={0},path={1}".format(self.size, tmpfile),
                     "--os-variant", shortid, "-x", xargs, "--initrd-inject",
                     "{0}/{1}".format(SCRIPTDIR, ksfile), "--location",
