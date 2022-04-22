@@ -173,7 +173,7 @@
             "releases" : {
                 "stable" : ["x86_64", "ppc64le", "aarch64"],
                 "branched": ["x86_64", "ppc64le", "aarch64"],
-                "rawhide": ["x86_64"]
+                "rawhide": ["x86_64", "ppc64le"]
             },
             "size" : "7",
             "imgver": "3",
