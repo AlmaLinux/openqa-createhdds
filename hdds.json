@@ -130,7 +130,8 @@
                 "-1" : ["x86_64", "ppc64le"],
                 "-2" : ["x86_64", "ppc64le"],
                 "stable": ["x86_64", "aarch64"],
-                "branched": ["x86_64", "aarch64"]
+                "branched": ["x86_64", "aarch64"],
+                "rawhide": ["x86_64"]
             },
             "size" : "10",
             "imgver": "3"
@@ -151,7 +152,8 @@
             "releases" : {
                 "-1" : ["ppc64le"],
                 "stable" : ["x86_64", "aarch64"],
-                "branched": ["x86_64", "aarch64"]
+                "branched": ["x86_64", "aarch64"],
+                "rawhide": ["x86_64"]
             },
             "size" : "20",
             "imgver": "4",
@@ -170,7 +172,8 @@
             "name" : "server",
             "releases" : {
                 "stable" : ["x86_64", "ppc64le", "aarch64"],
-                "branched": ["x86_64", "ppc64le", "aarch64"]
+                "branched": ["x86_64", "ppc64le", "aarch64"],
+                "rawhide": ["x86_64"]
             },
             "size" : "7",
             "imgver": "3",
@@ -180,7 +183,8 @@
             "name" : "kde",
             "releases" : {
                 "stable" : ["x86_64"],
-                "branched" : ["x86_64"]
+                "branched" : ["x86_64"],
+                "rawhide": ["x86_64"]
             },
             "size" : "20",
             "imgver": "4"
