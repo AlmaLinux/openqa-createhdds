@@ -299,7 +299,7 @@ class VirtInstallImage(object):
         variant = self.variant
         # From F31 onwards, Workstation tree is not installable and we
         # build Workstation images out of Everything
-        if variant == 'Workstation' and str(self.release).isdigit() and int(self.release) > 30:
+        if variant == 'Workstation':
             variant = 'Everything'
         
         try:
