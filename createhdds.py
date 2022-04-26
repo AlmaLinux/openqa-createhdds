@@ -206,9 +206,12 @@ class VirtInstallImage(object):
     maximum age of the image file (in days) - if the image is older
     than this, 'check' will report it as 'outdated' and 'all' will
     rebuild it. 'bootopts' are used to pass boot options to the
-    virtual image to provide better control of the VM.
+    virtual image to provide better control of the VM. 'branched'
+    and 'rawhide' are flags for whether this is a branched or Rawhide
+    release (which affects the paths).
     """
-    def __init__(self, name, release, arch, size, variant=None, imgver='', maxage=14, bootopts=None):
+    def __init__(self, name, release, arch, size, variant=None, imgver='', maxage=14,
+                 bootopts=None, branched=False, rawhide=False):
         self.name = name
         self.size = size
         self.filename = "disk_f{0}_{1}".format(str(release), name)
@@ -227,6 +230,8 @@ class VirtInstallImage(object):
             else:
                 self.variant = "Everything"
         self.bootopts = bootopts
+        self.rawhide = rawhide
+        self.branched = branched
 
     @property
     def kickstart_file(self):
@@ -306,10 +311,9 @@ class VirtInstallImage(object):
             # this is almost complex enough to need fedfind but not
             # quite, I think. also fedfind can't find the 'transient'
             # rawhide and branched locations at present
-            if str(self.release).lower() == 'rawhide':
+            if self.rawhide:
                 loctmp = "https://dl.fedoraproject.org/pub/{0}/development/rawhide/{2}/{3}/os"
-            elif int(self.release) > fedfind.helpers.get_current_release(branched=False):
-                # branched
+            elif self.branched:
                 loctmp = "https://dl.fedoraproject.org/pub/{0}/development/{1}/{2}/{3}/os/"
             else:
                 loctmp = "https://download.fedoraproject.org/pub/{0}/releases/{1}/{2}/{3}/os/"
@@ -497,7 +501,9 @@ def get_virtinstall_images(imggrp, nextrel=None, releases=None):
     bootopts = imggrp.get('bootopts')
     # add an image for each release/arch combination
     for (release, arches) in releases.items():
-        if release.lower() == 'branched':
+        branched = release.lower() == 'branched'
+        rawhide = release.lower() == 'rawhide'
+        if branched:
             # find Branched, if it exists
             curr = fedfind.helpers.get_current_release(branched=False)
             branch = fedfind.helpers.get_current_release(branched=True)
@@ -506,6 +512,10 @@ def get_virtinstall_images(imggrp, nextrel=None, releases=None):
             else:
                 logger.info("Branched image requested, but Branched does not currently exist")
                 continue
+        elif rawhide:
+            # find Rawhide release number
+            rawrel = fedfind.helpers.get_current_release(branched=True) + 1
+            rels = [rawrel]
         elif release.lower() == 'stable':
             # this means "all current stable releases"
             rels = fedfind.helpers.get_current_stables()
@@ -516,14 +526,15 @@ def get_virtinstall_images(imggrp, nextrel=None, releases=None):
                 nextrel = fedfind.helpers.get_current_release() + 1
             rels = [int(nextrel) + int(release)]
         else:
-            # assume a single integer release number, or 'rawhide'
+            # assume a single integer release number
             rels = [release]
         for arch in arches:
             for rel in rels:
                 key = "{0}-{1}".format(rel, arch)
                 # using a dict here avoids dupes
                 imgs[key] = VirtInstallImage(name, rel, arch, variant=variant, size=size,
-                                             imgver=imgver, maxage=maxage, bootopts=bootopts)
+                                             imgver=imgver, maxage=maxage, bootopts=bootopts,
+                                             branched=branched, rawhide=rawhide)
     return list(imgs.values())
 
 def get_all_images(hdds, nextrel=None):
