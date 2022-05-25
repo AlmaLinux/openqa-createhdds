@@ -210,7 +210,7 @@ class VirtInstallImage(object):
     and 'rawhide' are flags for whether this is a branched or Rawhide
     release (which affects the paths).
     """
-    def __init__(self, name, release, arch, size, variant=None, imgver='', maxage=14,
+    def __init__(self, name, release, arch, size, variant=None, imgver='', maxage=7,
                  bootopts=None, branched=False, rawhide=False):
         self.name = name
         self.size = size
@@ -491,7 +491,7 @@ def get_virtinstall_images(imggrp, nextrel=None, releases=None):
         nextrel = 0
     name = imggrp['name']
     # this is the second place we set a default for maxage - bit ugly
-    maxage = int(imggrp.get('maxage', 14))
+    maxage = int(imggrp.get('maxage', 7))
     # ditto variant
     variant = imggrp.get('variant')
     if not releases:
