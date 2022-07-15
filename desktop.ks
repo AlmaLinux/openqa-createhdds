@@ -18,5 +18,6 @@ poweroff
 %end
 
 %post
+authselect enable-feature with-fingerprint
 touch $INSTALL_ROOT/home/home_preserved
 %end
