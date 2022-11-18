@@ -25,11 +25,8 @@ poweroff
 @networkmanager-submodules
 fedora-release-kde
 falkon
+
 imsettings-qt
 -initial-setup
 -initial-setup-gui
-
-# to workaround https://bugzilla.redhat.com/show_bug.cgi?id=2133829
-# drop when that bug is resolved
--systemd-oomd-defaults
 %end
