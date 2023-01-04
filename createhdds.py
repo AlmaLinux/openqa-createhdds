@@ -17,7 +17,7 @@
 #
 # Author: Adam Williamson <awilliam@redhat.com>
 
-"""Tool for creating hard disk images for Fedora openQA."""
+"""Tool for creating hard disk images for Almalinux openQA."""
 
 import argparse
 import logging
@@ -29,7 +29,6 @@ import sys
 import tempfile
 import time
 
-import fedfind.helpers
 import guestfs
 import libvirt
 import platform
@@ -63,7 +62,7 @@ def supported_arches():
     """
     powerpc_arches = ['ppc64', 'ppc64le', 'noarch']
     intel_arches = ['i686', 'x86_64', 'noarch']
-    aarch64_arches = ['aarch64', 'armv7l']
+    aarch64_arches = ['aarch64']
     if CPUARCH in powerpc_arches:
         supported_arches = powerpc_arches
     elif CPUARCH in intel_arches:
@@ -264,14 +263,14 @@ class VirtInstallImage(object):
         # figure out the best os-variant. NOTE: libosinfo >= 0.3.1
         # properly returns 1 on failure, but using workaround for old
         # bug where it didn't in case EPEL doesn't have 0.3.1
-        shortid = "fedora{0}".format(self.release)
+        shortid = "almalinux{0}".format(self.release)
         args = ["osinfo-query", "os", "short-id={0}".format(shortid)]
         process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         out = process.communicate()[0].decode()
         if shortid not in out:
-            # this will just use the most recent fedora release number
+            # this will just use the most recent almalinux release number
             # virt-install / osinfo knows
-            shortid = 'fedora-unknown'
+            shortid = 'almalinux-unknown'
 
         # destroy and delete the domain we use for all virt-installs
         conn = libvirt.open()
@@ -290,16 +289,16 @@ class VirtInstallImage(object):
 
         tmpfile = "{0}.tmp".format(self.filename)
         arch = self.arch
-        fedoradir = 'fedora/linux'
+        almalinuxdir = 'almalinux/linux'
         memsize = '3072'
         if arch == 'i686':
             arch = 'i386'
         if arch in ['ppc64','ppc64le']:
-            fedoradir = 'fedora-secondary'
+            almalinuxdir = 'almalinux-secondary'
             memsize = '4096'
         if arch == 'i386':
-            # i686 is in fedora-secondary (until it died)
-            fedoradir = 'fedora-secondary'
+            # i686 is in almalinux-secondary (until it died)
+            almalinuxdir = 'almalinux-secondary'
 
         variant = self.variant
         # From F31 onwards, Workstation tree is not installable and we
@@ -311,22 +310,19 @@ class VirtInstallImage(object):
             # this is almost complex enough to need fedfind but not
             # quite, I think. also fedfind can't find the 'transient'
             # rawhide and branched locations at present
-            if self.rawhide:
-                loctmp = "https://dl.fedoraproject.org/pub/{0}/development/rawhide/{2}/{3}/os"
-            elif self.branched:
-                loctmp = "https://dl.fedoraproject.org/pub/{0}/development/{1}/{2}/{3}/os/"
-            else:
-                loctmp = "https://download.fedoraproject.org/pub/{0}/releases/{1}/{2}/{3}/os/"
+            loctmp = "http://westus2.azure.repo.almalinux.org/almalinux/{1}/BaseOS/{3}/os/"
+            # "https://mirrors.almalinux.org/mirrorlist/$releasever/baseos"
+            # "https://download.almalinuxproject.org/pub/{0}/releases/{1}/{2}/{3}/os/"
             ksfile = self.kickstart_file
             xargs = "inst.ks=file:/{0}".format(ksfile)
-            if str(self.release) == '35':
+            #if str(self.release) == '35':
                 # we need this for installs to work with updated systemd:
                 # https://bugzilla.redhat.com/show_bug.cgi?id=2019579#c24
-                xargs += " inst.updates=https://rvykydal.fedorapeople.org/update-images/updates.f35-2019579-resolvconf.img"
+            #    xargs += " inst.updates=https://rvykydal.almalinuxpeople.org/update-images/updates.f35-2019579-resolvconf.img"
             args = ["virt-install", "--disk", "size={0},path={1}".format(self.size, tmpfile),
                     "--os-variant", shortid, "-x", xargs, "--initrd-inject",
                     "{0}/{1}".format(SCRIPTDIR, ksfile), "--location",
-                    loctmp.format(fedoradir, str(self.release), variant, arch), "--name", "createhdds",
+                    loctmp.format(almalinuxdir, str(self.release), variant, arch), "--name", "createhdds",
                     "--memory", memsize, "--noreboot", "--wait", "-1"]
             if logger.getEffectiveLevel() == logging.DEBUG:
                 # let's get virt-install debug logs too
@@ -337,8 +333,8 @@ class VirtInstallImage(object):
                 args.extend(("--graphics", "none", "--extra-args", "console=ttyS0"))
             else:
                 args.extend(("--graphics", "vnc", "--noautoconsole"))
-            # this is a hacky workaround for a weird bug on Fedora's prod
-            # openQA server:
+            # this is a hacky workaround for a weird bug on Almalinux's prod
+            # OpenQA server:
             # https://bugzilla.redhat.com/show_bug.cgi?id=1387798
             args.extend(("--network", "user"))
             # run the command, timing out after 1 hour; sometimes creation
@@ -470,7 +466,7 @@ def get_guestfs_images(imggrp, labels=None, filesystems=None):
 def get_virtinstall_images(imggrp, nextrel=None, releases=None):
     """Passed a single 'image group' dict (usually read out of hdds.
     json), returns a list of VirtInstallImage instances. 'nextrel'
-    indicates the 'next' release of Fedora: sometimes we determine the
+    indicates the 'next' release of Almalinux: sometimes we determine the
     release to build image(s) for in relation to this, so we need to
     know it. If it's not specified, we ask fedfind to figure it out
     for us (this is the usual case, we just allow specifying it
@@ -503,28 +499,8 @@ def get_virtinstall_images(imggrp, nextrel=None, releases=None):
     for (release, arches) in releases.items():
         branched = release.lower() == 'branched'
         rawhide = release.lower() == 'rawhide'
-        if branched:
-            # find Branched, if it exists
-            curr = fedfind.helpers.get_current_release(branched=False)
-            branch = fedfind.helpers.get_current_release(branched=True)
-            if branch > curr:
-                rels = [branch]
-            else:
-                logger.info("Branched image requested, but Branched does not currently exist")
-                continue
-        elif rawhide:
-            # find Rawhide release number
-            rawrel = fedfind.helpers.get_current_release(branched=True) + 1
-            rels = [rawrel]
-        elif release.lower() == 'stable':
-            # this means "all current stable releases"
-            rels = fedfind.helpers.get_current_stables()
-        elif release != 'rawhide' and int(release) < 0:
-            # negative release indicates 'relative to next release'
-            # -1 is CURRREL, -2 is PREVREL
-            if not nextrel:
-                nextrel = fedfind.helpers.get_current_release() + 1
-            rels = [int(nextrel) + int(release)]
+        if int(release) > 0:
+            rels = [int(release)]
         else:
             # assume a single integer release number
             rels = [release]
@@ -753,7 +729,7 @@ def cli_image(args, *_):
 def parse_args(hdds):
     """Parse arguments with argparse."""
     parser = argparse.ArgumentParser(description=(
-        "Tool for creating hard disk images for Fedora openQA."))
+        "Tool for creating hard disk images for Almalinux openQA."))
     parser.add_argument(
         '-l', '--loglevel', help="The level of log messages to show",
         choices=('debug', 'info', 'warning', 'error', 'critical'),
