@@ -4,7 +4,11 @@ createhdds.py creates and maintains the set of pre-rolled hard disk images neede
 
 ## Requirements
 
-createhdds requires libvirt-daemon-kvm, libvirt-python3, python3-libguestfs, python3-fedfind, qemu-kvm, virt-install, and (for ppc64 images) powerpc-utils. You will need somewhere around 100-150GB of disk space for the full set of base images for all supported arches.
+`createhdds` requires libvirt-daemon-kvm, libvirt-python3, python3-libguestfs, qemu-kvm, virt-install, and powerpc-utils (for ppc64) packages installed on host system. You will need somewhere around `100-150GB` of disk space for the full set of base images for `each` supported arches.
+
+```sh
+sudo dnf install -y libvirt-daemon-kvm libvirt-python3 python3-libguestfs qemu-kvm virt-install
+```
 
 ## Usage
 
