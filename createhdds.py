@@ -310,9 +310,8 @@ class VirtInstallImage(object):
             # this is almost complex enough to need fedfind but not
             # quite, I think. also fedfind can't find the 'transient'
             # rawhide and branched locations at present
-            loctmp = "http://westus2.azure.repo.almalinux.org/almalinux/{1}/BaseOS/{3}/os/"
+            loctmp = "https://repo.almalinux.org/almalinux/{1}/BaseOS/{3}/os/"
             # "https://mirrors.almalinux.org/mirrorlist/$releasever/baseos"
-            # "https://download.almalinuxproject.org/pub/{0}/releases/{1}/{2}/{3}/os/"
             ksfile = self.kickstart_file
             xargs = "inst.ks=file:/{0}".format(ksfile)
             #if str(self.release) == '35':
