@@ -127,8 +127,8 @@
         {
             "name" : "minimal",
             "releases" : {
-                "8" : ["x86_64", "ppc64le", "aarch64"],
-                "9" : ["x86_64", "ppc64le", "aarch64"]
+                "8" : ["x86_64", "ppc64le", "aarch64", "s390x"],
+                "9" : ["x86_64", "ppc64le", "aarch64", "s390x"]
             },
             "size" : "10",
             "imgver": "3"
@@ -165,8 +165,8 @@
         {
             "name" : "server",
             "releases" : {
-                "8" : ["x86_64", "ppc64le", "aarch64"],
-                "9" : ["x86_64", "ppc64le", "aarch64"]
+                "8" : ["x86_64", "ppc64le", "aarch64", "s390x"],
+                "9" : ["x86_64", "ppc64le", "aarch64", "s390x"]
             },
             "size" : "7",
             "imgver": "3",
@@ -184,8 +184,8 @@
         {
             "name" : "support",
             "releases" : {
-                "8" : ["x86_64", "ppc64le", "aarch64"],
-                "9" : ["x86_64", "ppc64le", "aarch64"]
+                "8" : ["x86_64", "ppc64le", "aarch64", "s390x"],
+                "9" : ["x86_64", "ppc64le", "aarch64", "s390x"]
             },
             "size" : "11",
             "imgver" : "5"
