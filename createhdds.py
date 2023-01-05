@@ -63,12 +63,15 @@ def supported_arches():
     powerpc_arches = ['ppc64', 'ppc64le', 'noarch']
     intel_arches = ['i686', 'x86_64', 'noarch']
     aarch64_arches = ['aarch64']
+    s390x_arches = ['s390x']
     if CPUARCH in powerpc_arches:
         supported_arches = powerpc_arches
     elif CPUARCH in intel_arches:
         supported_arches = intel_arches
     elif CPUARCH == 'aarch64':
         supported_arches = aarch64_arches
+    elif CPUARCH == 's390x':
+        supported_arches = s390x_arches
     else:
         supported_arches = []
         logger.info("Need to add a list of supported arches for %s CPU", CPUARCH)
@@ -814,7 +817,7 @@ def parse_args(hdds):
             "this nor --release is set, createhdds will decide the appropriate "
             "arch(es) to build for each release. If this is not set but --release "
             "is set, only x86_64 image(s) will be built.",
-            choices=('x86_64', 'i686', 'ppc64le', 'aarch64'))
+            choices=('x86_64', 'i686', 'ppc64le', 'aarch64', 's390x'))
         imgparser.set_defaults(func=cli_image)
         # Here we're stuffing the type of the image and the dict from
         # hdds into args for cli_image() to use.
