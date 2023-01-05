@@ -268,9 +268,8 @@ class VirtInstallImage(object):
         process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         out = process.communicate()[0].decode()
         if shortid not in out:
-            # this will just use the most recent almalinux release number
-            # virt-install / osinfo knows
-            shortid = 'almalinux-unknown'
+            # Use `almalinux8` as default when not found
+            shortid = 'almalinux8'
 
         # destroy and delete the domain we use for all virt-installs
         conn = libvirt.open()
