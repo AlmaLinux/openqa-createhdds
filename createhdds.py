@@ -341,12 +341,15 @@ class VirtInstallImage(object):
             # run the command, timing out after 1 hour; sometimes creation
             # seems to just get mysteriously stuck, we need to bail and
             # retry in this case
+            time_out=3600
+            if arch == "s390x":
+                time_out=9000
             try:
                 logger.info("Install starting...")
                 logger.debug("Command: %s", ' '.join(args))
                 if not textinst:
                     logger.info("Connect via VNC to monitor")
-                ret = subprocess.call(args, timeout=3600)
+                ret = subprocess.call(args, timeout=time_out)
             except subprocess.TimeoutExpired:
                 logger.warning("Image creation timed out!")
                 # clean up the domain again
