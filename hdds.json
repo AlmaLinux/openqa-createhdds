@@ -173,15 +173,6 @@
             "variant": "Server"
         },
         {
-            "name" : "kde",
-            "releases" : {
-                "8" : ["x86_64"],
-                "9" : ["x86_64"]
-            },
-            "size" : "20",
-            "imgver": "4"
-        },
-        {
             "name" : "support",
             "releases" : {
                 "8" : ["x86_64", "ppc64le", "aarch64", "s390x"],
