@@ -216,7 +216,7 @@ class VirtInstallImage(object):
                  bootopts=None, branched=False, rawhide=False):
         self.name = name
         self.size = size
-        self.filename = "disk_f{0}_{1}".format(str(release), name)
+        self.filename = "disk_al{0}_{1}".format(str(release), name)
         if imgver:
             self.filename = "{0}_{1}".format(self.filename, imgver)
         self.filename = "{0}_{1}.qcow2".format(self.filename, arch)
