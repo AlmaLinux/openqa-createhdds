@@ -82,6 +82,66 @@
             ]
         },
         {
+            "name" : "ks_prerelease_8",
+            "size" : "100M",
+            "imgver" : "6",
+            "parts" : [
+                {
+                    "filesystem" : "ext4",
+                    "type" : "p",
+                    "start" : "4096",
+                    "end" : "-1"
+                }
+            ],
+            "uploads" : [
+                {
+                    "part" : "1",
+                    "target" : "/root-user-crypted-net.ks",
+                    "source" : "root-user-crypted-net_prerelease_8.ks"
+                },
+                {
+                    "part" : "1",
+                    "target" : "/freeipa.ks",
+                    "source" : "freeipa.ks"
+                },
+                {
+                    "part" : "1",
+                    "target" : "/freeipaclient.ks",
+                    "source" : "freeipaclient.ks"
+                }
+            ]
+        },
+        {
+            "name" : "ks_prerelease_9",
+            "size" : "100M",
+            "imgver" : "6",
+            "parts" : [
+                {
+                    "filesystem" : "ext4",
+                    "type" : "p",
+                    "start" : "4096",
+                    "end" : "-1"
+                }
+            ],
+            "uploads" : [
+                {
+                    "part" : "1",
+                    "target" : "/root-user-crypted-net.ks",
+                    "source" : "root-user-crypted-net_prerelease_9.ks"
+                },
+                {
+                    "part" : "1",
+                    "target" : "/freeipa.ks",
+                    "source" : "freeipa.ks"
+                },
+                {
+                    "part" : "1",
+                    "target" : "/freeipaclient.ks",
+                    "source" : "freeipaclient.ks"
+                }
+            ]
+        },
+        {
             "name" : "updates_img",
             "size" : "100M",
             "imgver" : "2",
