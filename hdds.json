@@ -84,7 +84,7 @@
         {
             "name" : "ks_prerelease_8",
             "size" : "100M",
-            "imgver" : "6",
+            "imgver" : "7",
             "parts" : [
                 {
                     "filesystem" : "ext4",
@@ -114,7 +114,7 @@
         {
             "name" : "ks_prerelease_9",
             "size" : "100M",
-            "imgver" : "6",
+            "imgver" : "7",
             "parts" : [
                 {
                     "filesystem" : "ext4",
